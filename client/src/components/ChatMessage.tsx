@@ -33,8 +33,8 @@ interface ChatMessageProps {
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   return (
-    <MessageContainer className={message.isBot ? 'bot' : 'user'}>
-      <MessageBubble className={message.isBot ? 'bot' : 'user'} elevation={1}>
+    <MessageContainer className={message.is_bot ? 'bot' : 'user'}>
+      <MessageBubble className={message.is_bot ? 'bot' : 'user'} elevation={1}>
         <Typography variant="body1">{message.content}</Typography>
       </MessageBubble>
     </MessageContainer>

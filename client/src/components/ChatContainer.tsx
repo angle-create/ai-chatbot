@@ -78,7 +78,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ userId }) => {
       </Header>
       <MessagesContainer>
         {messages.map((message) => (
-          <ChatMessage key={message._id} message={message} />
+          <ChatMessage key={message.id} message={message} />
         ))}
         <div ref={messagesEndRef} />
       </MessagesContainer>
