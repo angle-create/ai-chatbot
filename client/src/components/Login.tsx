@@ -10,12 +10,12 @@ import {
 } from '@mui/material';
 import { chatApi } from '../api/chatApi';
 
-const LoginContainer = styled(Container)(({ theme }) => ({
+const LoginContainer = styled(Container)({
   height: '100vh',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-}));
+});
 
 const LoginForm = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -40,9 +40,9 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
     try {
       const user = await chatApi.createUser(username);
-      onLogin(user._id);
+      onLogin(user.id);
     } catch (error) {
-      setError('ログインに失敗しました。もう一度お試しください。');
+      setError('ユーザー登録に失敗しました。もう一度お試しください。');
       console.error('Login failed:', error);
     }
   };
