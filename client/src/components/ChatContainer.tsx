@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Paper, Typography, styled } from '@mui/material';
+import { Box, Paper, Typography, styled, Alert, Snackbar } from '@mui/material';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { chatApi, Message } from '../api/chatApi';
@@ -31,6 +31,7 @@ interface ChatContainerProps {
 
 export const ChatContainer: React.FC<ChatContainerProps> = ({ userId }) => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -44,6 +45,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ userId }) => {
         setMessages(history);
       } catch (error) {
         console.error('Failed to load chat history:', error);
+        setError('チャット履歴の読み込みに失敗しました。');
       }
     };
 
@@ -58,9 +60,15 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ userId }) => {
     try {
       const response = await chatApi.sendMessage(userId, content);
       setMessages(prev => [...prev, response.userMessage, response.botMessage]);
+      setError(null);
     } catch (error) {
       console.error('Failed to send message:', error);
+      setError('メッセージの送信に失敗しました。');
     }
+  };
+
+  const handleCloseError = () => {
+    setError(null);
   };
 
   return (
@@ -75,6 +83,16 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ userId }) => {
         <div ref={messagesEndRef} />
       </MessagesContainer>
       <ChatInput onSendMessage={handleSendMessage} />
+      <Snackbar 
+        open={!!error} 
+        autoHideDuration={6000} 
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseError} severity="error">
+          {error}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }; 
