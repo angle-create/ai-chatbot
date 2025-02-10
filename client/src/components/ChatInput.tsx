@@ -8,6 +8,24 @@ const InputContainer = styled(Box)(({ theme }) => ({
   gap: theme.spacing(1),
   backgroundColor: theme.palette.background.paper,
   borderTop: `1px solid ${theme.palette.divider}`,
+  position: 'sticky',
+  bottom: 0,
+  zIndex: 1,
+  backdropFilter: 'blur(10px)',
+}));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: theme.palette.primary.dark,
+    transform: 'scale(1.05)',
+  },
+  '&:disabled': {
+    backgroundColor: theme.palette.action.disabledBackground,
+    color: theme.palette.action.disabled,
+  },
 }));
 
 interface ChatInputProps {
@@ -35,15 +53,21 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           size="small"
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              '&:hover fieldset': {
+                borderColor: 'primary.main',
+              },
+            },
+          }}
         />
-        <IconButton
-          color="primary"
+        <StyledIconButton
           type="submit"
           disabled={!message.trim()}
-          sx={{ bgcolor: 'primary.main', color: 'white', '&:hover': { bgcolor: 'primary.dark' } }}
+          size="medium"
         >
           <SendIcon />
-        </IconButton>
+        </StyledIconButton>
       </InputContainer>
     </form>
   );
