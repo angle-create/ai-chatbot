@@ -1,28 +1,48 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Paper, Typography, styled, Alert, Snackbar } from '@mui/material';
+import { Box, Paper, styled, Alert, Snackbar, useTheme } from '@mui/material';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { chatApi, Message } from '../api/chatApi';
+import { AutoAwesome } from '@mui/icons-material';
 
 const Container = styled(Paper)(({ theme }) => ({
   height: '100vh',
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: theme.palette.background.default,
+  alignItems: 'center',
 }));
 
 const Header = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
-  backgroundColor: theme.palette.primary.main,
-  color: theme.palette.primary.contrastText,
+  padding: theme.spacing(2, 3),
+  backgroundColor: theme.palette.background.paper,
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
 }));
 
 const MessagesContainer = styled(Box)(({ theme }) => ({
   flex: 1,
   padding: theme.spacing(2),
+  paddingBottom: '15px',
   overflowY: 'auto',
   display: 'flex',
   flexDirection: 'column',
+  width: '70%',
+  margin: '0 auto',
+  position: 'relative',
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '100px',
+    background: 'linear-gradient(to bottom, transparent 20%, rgba(32, 33, 36, 0.8))',
+    pointerEvents: 'none',
+    backdropFilter: 'blur(4px)',
+    borderRadius: theme.shape.borderRadius,
+  }
 }));
 
 interface ChatContainerProps {
@@ -30,6 +50,7 @@ interface ChatContainerProps {
 }
 
 export const ChatContainer: React.FC<ChatContainerProps> = ({ userId }) => {
+  const theme = useTheme();
   const [messages, setMessages] = useState<Message[]>([]);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -74,7 +95,10 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ userId }) => {
   return (
     <Container elevation={3}>
       <Header>
-        <Typography variant="h6">AI チャットボット</Typography>
+        <AutoAwesome sx={{ 
+          color: theme.palette.primary.main,
+          fontSize: 22,
+        }} />
       </Header>
       <MessagesContainer>
         {messages.map((message) => (

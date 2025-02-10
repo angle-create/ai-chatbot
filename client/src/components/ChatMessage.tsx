@@ -1,40 +1,51 @@
 import React from 'react';
-import { Box, Paper, Typography, styled, useTheme } from '@mui/material';
+import { Box, Paper, Typography, styled, useTheme, Avatar } from '@mui/material';
+import { AutoAwesome } from '@mui/icons-material';
 import { Message } from '../api/chatApi';
 
 const MessageContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-start',
-  marginBottom: theme.spacing(2),
-  '&.bot': {
-    justifyContent: 'flex-start',
-  },
+  marginBottom: theme.spacing(3),
+  gap: theme.spacing(2),
+  padding: theme.spacing(0, 2),
   '&.user': {
     justifyContent: 'flex-end',
   },
 }));
 
+const MessageContent = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  maxWidth: '70%',
+}));
+
 const MessageBubble = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
-  maxWidth: '70%',
   borderRadius: 16,
-  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-  transition: 'all 0.2s ease-in-out',
-  '&.bot': {
-    backgroundColor: theme.palette.background.paper,
-    borderLeft: `4px solid ${theme.palette.primary.main}`,
-    '&:hover': {
-      transform: 'translateX(2px)',
-    },
-  },
+  backgroundColor: theme.palette.background.paper,
+  position: 'relative',
   '&.user': {
-    backgroundColor: theme.palette.primary.dark,
-    color: theme.palette.primary.contrastText,
-    borderRight: `4px solid ${theme.palette.secondary.main}`,
-    '&:hover': {
-      transform: 'translateX(-2px)',
+    backgroundColor: 'rgba(66, 133, 244, 0.08)', // Google Blueの透明バージョン
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      right: -8,
+      top: 16,
+      borderStyle: 'solid',
+      borderWidth: '8px 0 8px 8px',
+      borderColor: `transparent transparent transparent rgba(66, 133, 244, 0.08)`,
     },
   },
+}));
+
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+  width: 32,
+  height: 32,
+  backgroundColor: 'transparent',
+  border: `1.5px solid ${theme.palette.primary.main}`,
+  color: theme.palette.primary.main,
+  padding: 5,
 }));
 
 interface ChatMessageProps {
@@ -46,18 +57,30 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
 
   return (
     <MessageContainer className={message.is_bot ? 'bot' : 'user'}>
-      <MessageBubble className={message.is_bot ? 'bot' : 'user'} elevation={2}>
-        <Typography variant="body1" sx={{ 
-          lineHeight: 1.6,
-          '& code': {
-            backgroundColor: theme.palette.background.default,
-            padding: '2px 4px',
-            borderRadius: 4,
-          }
-        }}>
-          {message.content}
-        </Typography>
-      </MessageBubble>
+      {message.is_bot && (
+        <StyledAvatar>
+          <AutoAwesome sx={{ fontSize: 18 }} />
+        </StyledAvatar>
+      )}
+      <MessageContent>
+        <MessageBubble className={message.is_bot ? 'bot' : 'user'} elevation={0}>
+          <Typography
+            variant="body1"
+            sx={{
+              lineHeight: 1.6,
+              letterSpacing: 0.15,
+              '& code': {
+                backgroundColor: theme.palette.background.default,
+                padding: '2px 6px',
+                borderRadius: 4,
+                fontFamily: 'Roboto Mono, monospace',
+              },
+            }}
+          >
+            {message.content}
+          </Typography>
+        </MessageBubble>
+      </MessageContent>
     </MessageContainer>
   );
 }; 

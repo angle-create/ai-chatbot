@@ -1,20 +1,28 @@
 import React, { useState } from 'react';
-import { Box, TextField, IconButton, styled } from '@mui/material';
+import { Box, TextField, IconButton, styled, useTheme } from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
 
 const InputContainer = styled(Box)(({ theme }) => ({
+  width: '60%',
   display: 'flex',
+  gap: theme.spacing(2),
+  marginTop: '-10px',
+  paddingBottom: '15px',
+  backgroundColor: theme.palette.background.default,
+  borderRadius: theme.shape.borderRadius,
+  border: '1px solid rgba(255, 255, 255, 0.2)',
   padding: theme.spacing(2),
-  gap: theme.spacing(1),
-  backgroundColor: theme.palette.background.paper,
-  borderTop: `1px solid ${theme.palette.divider}`,
-  position: 'sticky',
-  bottom: 0,
-  zIndex: 1,
-  backdropFilter: 'blur(10px)',
 }));
 
+const FormWrapper = styled('form')({
+  width: '100%',
+  display: 'flex',
+  gap: '16px',
+});
+
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  width: 40,
+  height: 40,
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.primary.contrastText,
   transition: 'all 0.2s ease-in-out',
@@ -26,6 +34,9 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     backgroundColor: theme.palette.action.disabledBackground,
     color: theme.palette.action.disabled,
   },
+  '& .MuiSvgIcon-root': {
+    fontSize: 20,
+  },
 }));
 
 interface ChatInputProps {
@@ -34,6 +45,7 @@ interface ChatInputProps {
 
 export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
   const [message, setMessage] = useState('');
+  const theme = useTheme();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,20 +55,45 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (message.trim()) {
+        onSendMessage(message);
+        setMessage('');
+      }
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
-      <InputContainer>
+    <InputContainer>
+      <FormWrapper onSubmit={handleSubmit}>
         <TextField
           fullWidth
+          multiline
+          maxRows={4}
           variant="outlined"
           placeholder="メッセージを入力..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          size="small"
+          onKeyPress={handleKeyPress}
           sx={{
             '& .MuiOutlinedInput-root': {
+              backgroundColor: theme.palette.background.default,
+              '&:hover': {
+                backgroundColor: theme.palette.background.default,
+              },
+              '&.Mui-focused': {
+                backgroundColor: theme.palette.background.default,
+              },
+              '& fieldset': {
+                borderColor: 'transparent',
+              },
               '&:hover fieldset': {
-                borderColor: 'primary.main',
+                borderColor: 'transparent',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: 'transparent',
               },
             },
           }}
@@ -64,11 +101,11 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
         <StyledIconButton
           type="submit"
           disabled={!message.trim()}
-          size="medium"
+          size="small"
         >
           <SendIcon />
         </StyledIconButton>
-      </InputContainer>
-    </form>
+      </FormWrapper>
+    </InputContainer>
   );
 }; 
