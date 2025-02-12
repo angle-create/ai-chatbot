@@ -36,18 +36,6 @@ const MessagesContainer = styled(Box)(({ theme }) => ({
   },
   scrollbarWidth: 'none',
   msOverflowStyle: 'none',
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '100px',
-    background: 'linear-gradient(to bottom, transparent 20%, rgba(32, 33, 36, 0.8))',
-    pointerEvents: 'none',
-    backdropFilter: 'blur(4px)',
-    borderRadius: theme.shape.borderRadius,
-  }
 }));
 
 interface ChatContainerProps {
