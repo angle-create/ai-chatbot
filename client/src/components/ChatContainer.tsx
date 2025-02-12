@@ -29,8 +29,13 @@ const MessagesContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   width: '70%',
-  margin: '0 auto',
+  margin: '1% auto',
   position: 'relative',
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
+  scrollbarWidth: 'none',
+  msOverflowStyle: 'none',
   '&::after': {
     content: '""',
     position: 'absolute',
